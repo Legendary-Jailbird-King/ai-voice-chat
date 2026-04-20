@@ -1,0 +1,21 @@
+# Claude Code Pre-commit Hooks
+# Place in .git/hooks/pre-commit and make executable
+
+#!/bin/bash
+set -e
+
+echo "🔍 Running pre-commit checks..."
+
+# 1. Type check
+echo "📝 Type checking..."
+cd frontend && npx tsc --noEmit && cd ..
+
+# 2. Lint check
+echo "🧹 Linting..."
+cd frontend && npx eslint src --ext .ts,.tsx && cd ..
+
+# 3. Build check
+echo "🏗️ Build check..."
+cd frontend && npm run build -- --emptyOutDir
+
+echo "✅ Pre-commit checks passed!"

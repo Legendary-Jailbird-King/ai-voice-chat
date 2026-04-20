@@ -4,73 +4,125 @@
 
 - **项目名称**: AI Voice Chat
 - **类型**: 实时语音对话应用
-- **核心功能**: 用户通过语音与AI对话，AI调用MCP读取文档并总结回复
-- **目标用户**: 需要通过语音快速获取信息、总结文档的用户
+- **核心功能**: 语音输入 → AI 对话 → 语音播报，支持 MCP 文档读取
+- **目标用户**: 需要语音交互和文档快速总结的用户
 
-## 2. 系统架构
+## 2. 团队成员
 
-### 2.1 整体架构
+| Agent | 角色 | 职责 |
+|-------|------|------|
+| **architect** | 系统架构师 | 技术选型、架构设计、代码规范 |
+| **frontend-dev** | 前端开发 | React + Vite + TypeScript + WebRTC |
+| **backend-dev** | 后端开发 | Node.js + WebSocket + AI + MCP |
+| **design** | UI/UX 设计 | 视觉规范、组件设计、交互设计 |
+| **code-review** | 代码审查 | PR 审查、Bug 发现、质量把控 |
+| **pm** | 产品经理 | 需求分析、任务规划、进度追踪 |
+
+## 3. 技术栈
+
+### 3.1 前端技术栈
+
+| 模块 | 技术 | 说明 |
+|------|------|------|
+| 框架 | React 19 + Vite 6 | 快速开发，现代化构建 |
+| 语言 | TypeScript | 类型安全 |
+| 样式 | CSS3 + CSS Variables | 原生 CSS，Design System 规范 |
+| 设计工具 | **Google Stitch 2.0** | 设计稿 → 生产级代码导出，自动响应式 |
+| 语音 | Web Speech API | 浏览器原生 STT/TTS |
+| 状态管理 | React hooks | 轻量级状态管理 |
+
+### 3.2 设计工作流（Google Stitch 2.0）
+
 ```
-用户语音 → WebRTC → 前端(React) → WebSocket → 后端(Node.js) → AI(LLM/TTS)
+Design (Figma/Sketch) → Google Stitch 2.0 → Production Code (React/HTML)
+                            ↓
+                    自动生成:
+                    - 生产级 React 组件
+                    - TypeScript 类型定义
+                    - CSS 样式（含响应式）
+                    - 组件规范文档
 ```
 
-### 2.2 核心技术栈
-| 模块 | 技术选型 | 说明 |
-|------|---------|------|
-| 前端框架 | React + Vite | 快速开发，符合技术栈 |
-| 语音捕获 | WebRTC/MediaRecorder | 浏览器原生 |
-| 实时通信 | WebSocket | 低延迟双向通信 |
-| 后端Runtime | Node.js | 轻量级WebSocket服务 |
-| AI模型 | GLM-5.1 (Z.AI) | 核心对话引擎 |
-| 语音合成 | GLM TTS / Web Speech API | 语音输出 |
-| MCP | 文档读取+总结 | 工具调用 |
-| 部署 | GitHub Pages (前端) + 容器化(后端) | 免费可预览 |
-| CI/CD | GitHub Actions | 自动化流水线 |
+**Google Stitch 2.0 优势：**
+- 一键将设计稿导出为生产级代码
+- 自动生成响应式布局代码
+- 支持 React/Vue/HTML 多框架输出
+- 保持设计与代码完全同步
+- 减少 design-dev 协作成本
 
-## 3. Agent Team 角色定义
+### 3.3 后端技术栈
 
-### 3.1 四个核心Agent角色
-| 角色 | 职责 | 技术重点 |
+| 模块 | 技术 |
+|------|------|
+| Runtime | Node.js 22 |
+| WebSocket | ws |
+| AI | GLM-5.1 (智谱 AI) |
+| 文档读取 | MCP (Multi-Platform) |
+| 进程管理 | PM2 |
+
+## 4. 系统架构
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      用户浏览器                              │
+│  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐    │
+│  │   React UI  │    │  STT (TTS)  │    │  WebSocket  │    │
+│  └─────────────┘    └─────────────┘    └──────┬──────┘    │
+└──────────────────────────────────────────────┼────────────┘
+                                               │
+                                    HTTPS/WSS (需域名)
+                                               │
+┌──────────────────────────────────────────────┼────────────┐
+│                    服务器                     │            │
+│  ┌─────────────┐    ┌─────────────┐    ┌──────┴──────┐    │
+│  │  PM2       │    │  WebSocket  │    │  GLM AI     │    │
+│  │  Manager   │    │  Server     │    │  (智谱)     │    │
+│  └─────────────┘    └──────┬──────┘    └─────────────┘    │
+│                            │                              │
+│                     ┌──────┴──────┐                       │
+│                     │  MCP Doc    │                       │
+│                     │  Reader     │                       │
+│                     └─────────────┘                       │
+└────────────────────────────────────────────────────────────┘
+```
+
+## 5. 功能清单
+
+### 5.1 核心功能
+- [x] 语音录制（按住说话按钮）
+- [x] 语音转文字（Web Speech API）
+- [x] 文字对话（WebSocket 实时通信）
+- [x] AI 回复（GLM-5.1）
+- [x] 语音播报（TTS）
+- [x] MCP 文档读取（网页/语雀/Notion/GitHub）
+- [x] 自动重连（断线 5 秒后重连）
+
+### 5.2 UI/UX 功能
+- [x] 连接状态指示
+- [x] 清空对话
+- [x] 消息时间戳
+- [x] 打字中动画
+- [x] 录音状态脉冲动画
+- [x] 移动端适配
+- [x] 消息自动滚动
+- [ ] Google Stitch 2.0 设计 → 代码流程（规划中）
+
+## 6. 待完成
+
+- [ ] SSL/WSS 配置（需要域名）
+- [ ] Google Stitch 2.0 设计工作流集成
+- [ ] 移动端适配完善
+- [ ] 性能优化
+- [ ] 单元测试
+
+## 7. Git 协作流程
+
+- 分支策略: `main` / `feature/*`
+- PR 流程: Design → Code → Review → Merge
+- Commit 规范: Conventional Commits
+
+## 8. 版本历史
+
+| 版本 | 日期 | 更新内容 |
 |------|------|---------|
-| **architect** | 系统设计、架构决策 | 系统架构、接口设计 |
-| **frontend-dev** | 前端开发 | React、Voice UI、WebRTC |
-| **backend-dev** | 后端开发 | Node.js、WebSocket、AI集成 |
-| **product-manager** | 产品规划、文档撰写 | PRD、进度跟踪 |
-
-### 3.2 Agent间协作流程
-1. **PM** 规划任务 → 分发给各Agent
-2. **Architect** 设计架构 → 输出给前端/后端
-3. **Frontend** + **Backend** 并行开发
-4. **PM** 验证质量，汇报进度
-
-## 4. 开发阶段
-
-### Phase 1: 基础架构 (W1)
-- [ ] 项目初始化，Git仓库结构
-- [ ] 前端：语音捕获界面
-- [ ] 后端：WebSocket基础服务
-- [ ] AI：GLM对话集成
-
-### Phase 2: 核心功能 (W2)
-- [ ] MCP文档读取
-- [ ] 语音流式传输
-- [ ] 多Agent协作测试
-
-### Phase 3: 部署上线 (W3)
-- [ ] GitHub Pages前端部署
-- [ ] GitHub Actions CI/CD
-- [ ] 实时预览环境
-
-## 5. Git协作规范
-
-- **分支策略**: `main` / `develop` / `feature/*`
-- **PR流程**: Feature → Develop → Main
-- **Commit规范**: Conventional Commits
-- **版本控制**: SemVer (v0.1.0起始)
-
-## 6. 部署方案
-
-- **前端**: GitHub Pages (master分支自动部署)
-- **后端**: 容器化，支持 Railway/Fly.io
-- **状态**: 开发中，可实时查看进度
-
+| v0.1.0 | 2026-04-20 | MVP 完成，包含基础语音对话和 MCP 文档 |

@@ -1,0 +1,56 @@
+{
+  "permissions": {
+    "allow": ["**"],
+    "deny": []
+  },
+  "env": {
+    "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}",
+    "ANTHROPIC_BASE_URL": "${ANTHROPIC_BASE_URL}",
+    "ANTHROPIC_DEFAULT_MODEL": "glm-5.1"
+  },
+  "model": "sonnet",
+  "maxTokens": 4096,
+  "temperature": 0.7,
+  
+  "ui": {
+    "theme": "dark",
+    "compactMode": false,
+    "showLineNumbers": true
+  },
+  
+  "tools": {
+    "allow": {
+      "browser": true,
+      "webSearch": true,
+      "webFetch": true
+    }
+  },
+  
+  "hooks": {
+    "preCommit": {
+      "enabled": true,
+      "commands": [
+        "cd frontend && npx tsc --noEmit",
+        "cd frontend && npx eslint src --ext .ts,.tsx"
+      ]
+    }
+  },
+  
+  "subagents": {
+    "explorer": {
+      "model": "haiku",
+      "tools": ["Read", "Glob", "Grep", "Search"]
+    },
+    "architect": {
+      "model": "sonnet",
+      "tools": ["Read", "Write", "Edit", "Bash", "Glob", "Grep"]
+    }
+  },
+  
+  "features": {
+    "autoLinter": true,
+    "formatOnSave": true,
+    "suggestTests": true,
+    "trackErrors": true
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "explorer",
+  "description": "Fast, read-only exploration agent for searching and understanding code. Use when you need to find files, understand codebase structure, or research before making changes. Returns summaries without modifying code.",
+  "model": "haiku",
+  "tools": {
+    "Read": true,
+    "Browse": true,
+    "Search": true,
+    "Grep": true,
+    "Glob": true
+  },
+  "permissions": {
+    "allow": [
+      "Read/**",
+      "Glob/**",
+      "Search/**"
+    ],
+    "deny": [
+      "Write/**",
+      "Edit/**",
+      "Bash/**"
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "architect",
+  "description": "System architecture expert. Use when designing system structure, choosing technologies, or planning technical decisions. Produces architecture diagrams, RFCs, and technical specifications.",
+  "model": "sonnet",
+  "tools": {
+    "Read": true,
+    "Write": true,
+    "Edit": true,
+    "Bash": true,
+    "Grep": true,
+    "Glob": true
+  },
+  "permissions": {
+    "allow": ["**"],
+    "deny": []
+  }
+}
