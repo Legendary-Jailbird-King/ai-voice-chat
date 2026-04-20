@@ -1,5 +1,9 @@
-function App() {
-  return <div>AI Voice Chat</div>;
-}
+import VoiceChat from './components/VoiceChat'
 
-export default App;
+export default function App() {
+  return (
+    <div className="app">
+      <VoiceChat />
+    </div>
+  )
+}
